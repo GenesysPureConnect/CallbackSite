@@ -1,0 +1,124 @@
+<html>
+<head>
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<style>
+ input{
+     max-width:350px;
+      margin-bottom: 10px;
+ }
+ button{
+     margin-bottom: 10px;
+ }
+</style>
+</head>
+<body>
+    <div class="">
+        <h1>Create a callback</h1>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">Server</label>
+            <div class="col-sm-10">
+                <input class="form-control" id="serverName" placeholder="Server Name" >
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword3" class="col-sm-2 control-label">Workgroup</label>
+            <div class="col-sm-10">
+                <input class="form-control" id="workgroup" placeholder="Workgroup" >
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword3" class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-10">
+                <input type="tel" class="form-control" id="name" placeholder="Name" >
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword3" class="col-sm-2 control-label">Phone Number</label>
+            <div class="col-sm-10">
+                <input type="tel" class="form-control" id="phone" placeholder="Phone Number" >
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword3" class="col-sm-2 control-label">Subject</label>
+            <div class="col-sm-10">
+                <input class="form-control" id="subject" placeholder="Callback Subject" >
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button class="btn btn-primary" id='createButton'>Create Callback</button>
+            </div>
+
+            <div class="col-sm-offset-2 col-sm-10">
+                <button class="btn btn-default" id="resetButton">Reset Form</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+
+    function resetForm(){
+
+        $("#serverName").val(localStorage["server"]);
+        $("#workgroup").val(localStorage["workgroup"]);
+        $("#phone").val(localStorage["phone"]);
+        $("#subject").val(localStorage["subject"]);
+        $("#name").val(localStorage["name"]);
+
+    }
+
+    $("#resetButton").click(function(){
+        localStorage["server"] = "";
+        localStorage["workgroup"] = "";
+        localStorage["phone"] = "";
+        localStorage["subject"] = "";
+        localStorage["name"] = "";
+
+        resetForm();
+    });
+    $("#createButton").click(function(){
+        var server = $("#serverName").val();
+        var workgroup = $("#workgroup").val();
+        var name = $("#name").val();
+        var phone = $("#phone").val();
+        var subject = $("#subject").val();
+
+        var data = {
+            "target": workgroup,
+            "targettype": "Workgroup",
+            "subject": subject,
+            "participant":
+            {
+                "name": name,
+                "telephone": phone
+            },
+            "language": "en-us"
+        }
+
+        $.ajax({
+            method: "POST",
+            contentType: "application/json",
+            url: 'webtools/'+ server +'/websvcs/callback/create',
+            data: JSON.stringify(data),
+            crossDomain: true,
+        }).done(function() {
+            alert('done');
+        });
+
+
+        localStorage["server"] = $("#serverName").val();
+        localStorage["workgroup"] = $("#workgroup").val();
+        localStorage["phone"] = $("#phone").val();
+        localStorage["subject"] = $("#subject").val();
+        localStorage["name"] = $("#name").val();
+    });
+
+    resetForm();
+    </script>
+</body>
+</html>
